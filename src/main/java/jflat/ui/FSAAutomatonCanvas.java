@@ -38,8 +38,11 @@ public class FSAAutomatonCanvas extends AbstractAutomatonCanvas<FSAState, FSATra
     protected void editState(FSAState state) {
         String newName = JOptionPane.showInputDialog(this, "Edit State:", state.getName());
         if (newName != null && !newName.trim().isEmpty()) {
-            if (!newName.equals(state.getName())) {
-                state.setName(automaton.generateUniqueStateName(newName.trim()));
+            String trimmedName = newName.trim();
+            if (!trimmedName.equals(state.getName())) {
+                saveState();
+                state.setName(automaton.generateUniqueStateName(trimmedName));
+                repaint();
             }
         }
     }
@@ -216,7 +219,10 @@ public class FSAAutomatonCanvas extends AbstractAutomatonCanvas<FSAState, FSATra
     }
 
     private void handleEquivalence(JFlatMainWindow mainWindow) {
-        if (!automaton.isValid()) return;
+        if (!automaton.isValid()) {
+            JOptionPane.showMessageDialog(this, "This automaton is not valid. Cannot check equivalence.", "Invalid Automata", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         FSAAutomata fsa2 = promptForSecondFSA(mainWindow, "Equivalence Check");
         if (fsa2 == null) return;
@@ -238,7 +244,10 @@ public class FSAAutomatonCanvas extends AbstractAutomatonCanvas<FSAState, FSATra
     }
 
     private void handleTestInput() {
-        if (!automaton.isValid()) return;
+        if (!automaton.isValid()) {
+            JOptionPane.showMessageDialog(this, "This automaton is not valid. Cannot test input.", "Invalid Automata", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         String inputString = JOptionPane.showInputDialog(this, "Enter the string to test against the automaton:", "Test Input", JOptionPane.QUESTION_MESSAGE);
         if (inputString == null) return;
@@ -275,8 +284,16 @@ public class FSAAutomatonCanvas extends AbstractAutomatonCanvas<FSAState, FSATra
             return null;
         }
 
-        String[] choices = availableNames.toArray(new String[0]);
-        String selectedTitle = (String) JOptionPane.showInputDialog(
+        record NamedAutomaton(String name, FSAAutomata fsa) {
+            @Override public String toString() { return name; }
+        }
+
+        NamedAutomaton[] choices = new NamedAutomaton[availableAutomata.size()];
+        for (int i = 0; i < availableAutomata.size(); i++) {
+            choices[i] = new NamedAutomaton(availableNames.get(i), availableAutomata.get(i));
+        }
+
+        NamedAutomaton selected = (NamedAutomaton) JOptionPane.showInputDialog(
                 this,
                 "Select the second automaton to use for " + actionName + ":",
                 "Select Automaton",
@@ -286,11 +303,7 @@ public class FSAAutomatonCanvas extends AbstractAutomatonCanvas<FSAState, FSATra
                 choices[0]
         );
 
-        if (selectedTitle != null) {
-            int index = availableNames.indexOf(selectedTitle);
-            return availableAutomata.get(index);
-        }
-        return null;
+        return selected != null ? selected.fsa() : null;
     }
 
     private List<FSAAutomata> promptForMultipleFSAs(JFlatMainWindow mainWindow, String actionName) {

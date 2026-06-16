@@ -96,7 +96,7 @@ public class FSAFunctions {
 
         FSAAutomata output = deepCopy(automata);
         output.setName(automata.getName() + "_complement");
-        for(FSAState state : automata.getStates()) {
+        for(FSAState state : output.getStates()) {
             state.setFinal(!state.isFinal());
         }
         return output;
@@ -138,12 +138,12 @@ public class FSAFunctions {
 
     public static FSAAutomata getIntersection(List<FSAAutomata> automatas) {
         if (automatas.size() < 2 || automatas.stream().anyMatch(automata -> !automata.isValid())) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Intersection requires at least 2 automata, got:");
         }
 
         String name = automatas.stream()
                 .map(FSAAutomata::getName)
-                .collect(Collectors.joining("_union_"));
+                .collect(Collectors.joining("_intersection_"));
         FSAAutomata output = new FSAAutomata(name);
 
         Map<FSAState, FSAAutomata> ownerByState = new HashMap<>();
@@ -234,7 +234,7 @@ public class FSAFunctions {
 
         String name = automatas.stream()
                 .map(FSAAutomata::getName)
-                .collect(Collectors.joining("_union_"));
+                .collect(Collectors.joining("_concatenation_"));
         FSAAutomata output = new FSAAutomata(name);
 
         List<FSAState> previousFinals = new LinkedList<>();
