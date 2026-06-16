@@ -84,7 +84,7 @@ public class FSAAutomatonCanvas extends AbstractAutomatonCanvas<FSAState, FSATra
         finalItem.setSelected(state.isFinal());
 
         finalItem.addActionListener(a -> {
-            saveState(); // Trigger snapshot for undo capability
+            saveState();
             state.setFinal(finalItem.isSelected());
             repaint();
         });

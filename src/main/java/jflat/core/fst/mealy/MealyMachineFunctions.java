@@ -70,7 +70,10 @@ public class MealyMachineFunctions {
         }
         for (MealyMachineTransition transition : state.getTransitions()) {
             if (transition.getInChar() == input.charAt(0)) {
-                return transition.getOutChar() + getOutput(transition.getEnd(), input.substring(1));
+                String output = getOutput(transition.getEnd(), input.substring(1));
+                if (output != null) {
+                    return transition.getOutChar() + output;
+                }
             }
         }
         return null;

@@ -60,7 +60,10 @@ public class MooreMachineFunctions {
         }
         for(MooreMachineTransition transition : state.getTransitions()) {
             if (transition.getSymbol() == input.charAt(0)) {
-                return transition.getEnd().getOutput() + getOutput(transition.getEnd(), input.substring(1));
+                String output = getOutput(transition.getEnd(), input.substring(1));
+                if (output != null) {
+                    return transition.getEnd().getOutput() + output;
+                }
             }
         }
         return null;
