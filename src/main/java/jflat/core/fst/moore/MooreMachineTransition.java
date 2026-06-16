@@ -1,6 +1,6 @@
-package jflat.core.fst.moore;
+package core.fst.moore;
 
-import jflat.core.generics.AbstractTransition;
+import core.generics.AbstractTransition;
 
 public class MooreMachineTransition extends AbstractTransition<MooreMachineState, MooreMachineTransition> {
     private char symbol;

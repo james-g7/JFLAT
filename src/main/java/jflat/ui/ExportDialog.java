@@ -1,4 +1,4 @@
-package jflat.ui;
+package ui;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

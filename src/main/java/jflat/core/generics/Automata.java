@@ -1,4 +1,4 @@
-package jflat.core.generics;
+package core.generics;
 
 import java.util.List;
 import java.util.Map;

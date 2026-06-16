@@ -1,8 +1,8 @@
-package jflat.ui;
+package ui;
 
-import jflat.core.generics.AbstractAutomata;
-import jflat.core.generics.AbstractState;
-import jflat.core.generics.AbstractTransition;
+import core.generics.AbstractAutomata;
+import core.generics.AbstractState;
+import core.generics.AbstractTransition;
 
 import javax.swing.*;
 import java.awt.*;

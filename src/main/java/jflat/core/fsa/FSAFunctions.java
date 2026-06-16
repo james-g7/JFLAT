@@ -1,4 +1,4 @@
-package jflat.core.fsa;
+package core.fsa;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -1,6 +1,6 @@
-package jflat.core.fsa;
+package core.fsa;
 
-import jflat.core.generics.AbstractTransition;
+import core.generics.AbstractTransition;
 
 import java.util.Objects;
 

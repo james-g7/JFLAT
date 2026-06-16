@@ -1,6 +1,6 @@
-package jflat.core.fst.moore;
+package core.fst.moore;
 
-import jflat.core.generics.AbstractState;
+import core.generics.AbstractState;
 
 public class MooreMachineState extends AbstractState<MooreMachineState, MooreMachineTransition> {
     private Character output;

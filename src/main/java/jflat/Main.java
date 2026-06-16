@@ -1,4 +1,4 @@
-import jflat.ui.JFlatMainWindow;
+import ui.JFlatMainWindow;
 
 import javax.swing.*;
 

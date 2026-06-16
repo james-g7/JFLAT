@@ -1,10 +1,10 @@
-package jflat.ui;
+package ui;
 
-import jflat.core.fst.mealy.MealyMachineAutomata;
-import jflat.core.fst.moore.MooreMachineAutomata;
-import jflat.core.fst.moore.MooreMachineFunctions;
-import jflat.core.fst.moore.MooreMachineState;
-import jflat.core.fst.moore.MooreMachineTransition;
+import core.fst.mealy.MealyMachineAutomata;
+import core.fst.moore.MooreMachineAutomata;
+import core.fst.moore.MooreMachineFunctions;
+import core.fst.moore.MooreMachineState;
+import core.fst.moore.MooreMachineTransition;
 
 import javax.swing.*;
 

@@ -1,6 +1,6 @@
-package jflat.core.fsa;
+package core.fsa;
 
-import jflat.core.generics.AbstractAutomata;
+import core.generics.AbstractAutomata;
 
 import java.util.*;
 import java.util.stream.Collectors;

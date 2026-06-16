@@ -1,6 +1,6 @@
-package jflat.core.fst.mealy;
+package core.fst.mealy;
 
-import jflat.core.generics.AbstractTransition;
+import core.generics.AbstractTransition;
 
 public class MealyMachineTransition extends AbstractTransition<MealyMachineState, MealyMachineTransition> {
     private char inChar;

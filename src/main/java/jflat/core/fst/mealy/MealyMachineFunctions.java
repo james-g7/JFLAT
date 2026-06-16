@@ -1,8 +1,8 @@
-package jflat.core.fst.mealy;
+package core.fst.mealy;
 
-import jflat.core.fst.moore.MooreMachineAutomata;
-import jflat.core.fst.moore.MooreMachineState;
-import jflat.core.fst.moore.MooreMachineTransition;
+import core.fst.moore.MooreMachineAutomata;
+import core.fst.moore.MooreMachineState;
+import core.fst.moore.MooreMachineTransition;
 
 import java.util.*;
 

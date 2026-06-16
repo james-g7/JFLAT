@@ -1,4 +1,4 @@
-package jflat.core.generics;
+package core.generics;
 
 public abstract class AbstractTransition<S extends AbstractState<S, T>, T extends AbstractTransition<S, T>> implements Transition<S, T> {
     private final S start;

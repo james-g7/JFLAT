@@ -1,6 +1,6 @@
-package jflat.core.fst.mealy;
+package core.fst.mealy;
 
-import jflat.core.generics.AbstractState;
+import core.generics.AbstractState;
 
 public class MealyMachineState extends AbstractState<MealyMachineState, MealyMachineTransition> {
 

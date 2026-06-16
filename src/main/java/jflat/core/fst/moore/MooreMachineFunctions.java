@@ -1,8 +1,8 @@
-package jflat.core.fst.moore;
+package core.fst.moore;
 
-import jflat.core.fst.mealy.MealyMachineAutomata;
-import jflat.core.fst.mealy.MealyMachineState;
-import jflat.core.fst.mealy.MealyMachineTransition;
+import core.fst.mealy.MealyMachineAutomata;
+import core.fst.mealy.MealyMachineState;
+import core.fst.mealy.MealyMachineTransition;
 
 import java.util.HashMap;
 import java.util.LinkedList;

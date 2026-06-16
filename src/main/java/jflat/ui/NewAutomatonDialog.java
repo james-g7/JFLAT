@@ -1,8 +1,8 @@
-package jflat.ui;
+package ui;
 
-import jflat.core.fsa.FSAAutomata;
-import jflat.core.fst.mealy.MealyMachineAutomata;
-import jflat.core.fst.moore.MooreMachineAutomata;
+import core.fsa.FSAAutomata;
+import core.fst.mealy.MealyMachineAutomata;
+import core.fst.moore.MooreMachineAutomata;
 
 import javax.swing.*;
 import java.awt.*;

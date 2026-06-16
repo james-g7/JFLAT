@@ -1,6 +1,6 @@
-package jflat.core.fsa;
+package core.fsa;
 
-import jflat.core.generics.AbstractState;
+import core.generics.AbstractState;
 
 public class FSAState extends AbstractState<FSAState, FSATransition> {
     private boolean isFinal;

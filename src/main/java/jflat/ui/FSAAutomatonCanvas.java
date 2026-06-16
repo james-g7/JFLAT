@@ -1,9 +1,9 @@
-package jflat.ui;
+package ui;
 
-import jflat.core.fsa.FSAAutomata;
-import jflat.core.fsa.FSAFunctions;
-import jflat.core.fsa.FSAState;
-import jflat.core.fsa.FSATransition;
+import core.fsa.FSAAutomata;
+import core.fsa.FSAFunctions;
+import core.fsa.FSAState;
+import core.fsa.FSATransition;
 
 import javax.swing.*;
 import java.awt.*;
