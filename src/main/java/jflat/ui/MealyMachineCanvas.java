@@ -7,6 +7,7 @@ import core.fst.mealy.MealyMachineTransition;
 import core.fst.moore.MooreMachineAutomata;
 
 import javax.swing.*;
+import java.util.Objects;
 
 public class MealyMachineCanvas extends  AbstractAutomatonCanvas<MealyMachineState, MealyMachineTransition, MealyMachineAutomata> {
     public MealyMachineCanvas(MealyMachineAutomata automaton) {
@@ -14,15 +15,8 @@ public class MealyMachineCanvas extends  AbstractAutomatonCanvas<MealyMachineSta
     }
 
     @Override
-    protected MealyMachineState createNewState(int x, int y) {
-        String defaultName = automaton.generateUniqueStateName("q");
-        String nameStr = JOptionPane.showInputDialog(this, "Enter State Name:", defaultName);
-        if (nameStr == null) {
-            return null;
-        }
-        saveState();
-        nameStr = nameStr.trim().isEmpty() ? defaultName : automaton.generateUniqueStateName(nameStr.trim());
-        return new MealyMachineState(nameStr, x, y);
+    protected MealyMachineState instantiateState(int x, int y, String name) {
+        return new MealyMachineState(name, x, y);
     }
 
     @Override
@@ -31,42 +25,30 @@ public class MealyMachineCanvas extends  AbstractAutomatonCanvas<MealyMachineSta
     }
 
     @Override
-    protected void editState(MealyMachineState state) {
-        String newName = JOptionPane.showInputDialog(this, "Edit State:", state.getName());
-        if (newName != null && !newName.trim().isEmpty()) {
-            if (!newName.equals(state.getName())) {
-                state.setName(automaton.generateUniqueStateName(newName.trim()));
-            }
-        }
-    }
-
-    @Override
     protected MealyMachineTransition createNewTransition(MealyMachineState start, MealyMachineState end) {
         JTextField inSymbolField = new JTextField();
         JTextField outSymbolField = new JTextField();
 
         Object[] message = {
-                "Enter transition symbol:", inSymbolField,
-                "Enter output symbol:", outSymbolField
+                "Enter transition symbol", inSymbolField,
+                "Enter output symbol:", outSymbolField,
         };
 
         int option = JOptionPane.showConfirmDialog(this, message, "New Transition",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
         if (option == JOptionPane.OK_OPTION) {
             String inSymbolStr = inSymbolField.getText();
             String outSymbolStr = outSymbolField.getText();
 
-            if (inSymbolStr != null && !inSymbolStr.isEmpty() &&
-                    outSymbolStr != null && !outSymbolStr.isEmpty()) {
-
+            if (inSymbolStr == null || inSymbolStr.isEmpty()) showErrorMessage("Transition symbols cannot be empty", "Couldn't Create Transition");
+            else if (outSymbolStr == null || outSymbolStr.isEmpty()) showErrorMessage("Output cannot be empty", "Couldn't Create Transition");
+            else if (inSymbolStr.length() != 1) showErrorMessage("Transition symbols must be single characters", "Couldn't Create Transition");
+            else if (outSymbolStr.length() != 1) showErrorMessage("Output must be a single character", "Couldn't Create Transition");
+            else {
+                saveState();
                 return new MealyMachineTransition(start, end, inSymbolStr.charAt(0), outSymbolStr.charAt(0));
-            } else {
-                showErrorMessage("Empty transitions are not allowed for this automaton", "Couldn't Create Transition");
-                return null;
             }
         }
-
         return null;
     }
 
@@ -76,45 +58,37 @@ public class MealyMachineCanvas extends  AbstractAutomatonCanvas<MealyMachineSta
     }
 
     @Override
-    protected MealyMachineTransition editTransition(MealyMachineTransition transition) {
-        JTextField inSymbolField = new JTextField(String.valueOf(transition.getInChar()));
-        JTextField outSymbolField = new JTextField(String.valueOf(transition.getOutChar()));
-
-        Object[] message = {
-                "Enter transition symbol:", inSymbolField,
-                "Enter output symbol:", outSymbolField
-        };
-
-        int option = JOptionPane.showConfirmDialog(this, message, "Edit Transition",
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (option == JOptionPane.OK_OPTION) {
-            String inSymbolStr = inSymbolField.getText();
-            String outSymbolStr = outSymbolField.getText();
-
-            if (inSymbolStr != null && !inSymbolStr.isEmpty() &&
-                    outSymbolStr != null && !outSymbolStr.isEmpty()) {
-                return new MealyMachineTransition(transition.getStart(), transition.getEnd(), inSymbolStr.charAt(0), outSymbolStr.charAt(0));
-            }
-            else {
-                showErrorMessage("Empty transitions are not allowed for this automaton", "Couldn't Create Transition");
-                return null;
-            }
-        }
-
+    protected MealyMachineTransition instantiateTransition(MealyMachineState start, MealyMachineState end, Character symbol) {
         return null;
     }
 
     @Override
-    protected void addContextMenuExtras(JPopupMenu popup, MealyMachineState state) {
-        return;
-    }
+    protected void editTransition(MealyMachineTransition transition) {
+        JTextField inSymbolField = new JTextField(transition.getInChar());
+        JTextField outSymbolField = new JTextField(transition.getOutChar());
 
-    @Override
-    protected boolean isStateFinal(MealyMachineState state) {
-        return false;
-    }
+        Object[] message = {
+                "Enter transition symbol", inSymbolField,
+                "Enter output symbol:", outSymbolField,
+        };
 
+        int option = JOptionPane.showConfirmDialog(this, message, "Edit Transition",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (option == JOptionPane.OK_OPTION) {
+            String inSymbolStr = inSymbolField.getText();
+            String outSymbolStr = outSymbolField.getText();
+
+            if (inSymbolStr == null || inSymbolStr.isEmpty()) showErrorMessage("Transition symbols cannot be empty", "Couldn't Edit Transition");
+            else if (outSymbolStr == null || outSymbolStr.isEmpty()) showErrorMessage("Output cannot be empty", "Couldn't Edit Transition");
+            else if (inSymbolStr.length() != 1) showErrorMessage("Transition symbols must be single characters", "Couldn't Edit Transition");
+            else if (outSymbolStr.length() != 1) showErrorMessage("Output must be a single character", "Couldn't Edit Transition");
+            else if (!(Objects.equals(inSymbolStr.charAt(0), transition.getInChar()) && Objects.equals(outSymbolStr.charAt(0), transition.getOutChar()))){
+                saveState();
+                transition.setInChar(inSymbolStr.charAt(0));
+                transition.setOutChar(outSymbolStr.charAt(0));
+            }
+        }
+    }
 
     @Override
     public void populateFunctionsMenu(JMenu functionsMenu, JFlatMainWindow mainWindow) {

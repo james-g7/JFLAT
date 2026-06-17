@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class FSAAutomatonCanvas extends AbstractAutomatonCanvas<FSAState, FSATransition, FSAAutomata> {
@@ -18,15 +19,8 @@ public class FSAAutomatonCanvas extends AbstractAutomatonCanvas<FSAState, FSATra
     }
 
     @Override
-    protected FSAState createNewState(int x, int y) {
-        String defaultName = automaton.generateUniqueStateName("q");
-        String nameStr = JOptionPane.showInputDialog(this, "Enter State Name:", defaultName);
-        if (nameStr == null) {
-            return null;
-        }
-        saveState();
-        nameStr = nameStr.trim().isEmpty() ? defaultName : automaton.generateUniqueStateName(nameStr.trim());
-        return new FSAState(false, nameStr, x, y);
+    protected FSAState instantiateState(int x, int y, String name) {
+        return new FSAState(false, name, x, y);
     }
 
     @Override
@@ -35,30 +29,29 @@ public class FSAAutomatonCanvas extends AbstractAutomatonCanvas<FSAState, FSATra
     }
 
     @Override
-    protected void editState(FSAState state) {
-        String newName = JOptionPane.showInputDialog(this, "Edit State:", state.getName());
-        if (newName != null && !newName.trim().isEmpty()) {
-            String trimmedName = newName.trim();
-            if (!trimmedName.equals(state.getName())) {
-                saveState();
-                state.setName(automaton.generateUniqueStateName(trimmedName));
-                repaint();
-            }
-        }
+    protected FSATransition instantiateTransition(FSAState start, FSAState end, Character symbol) {
+        return null;
     }
 
     @Override
     protected FSATransition createNewTransition(FSAState start, FSAState end) {
-        String symbolStr = JOptionPane.showInputDialog(this,
-                "Enter transition symbol\n(Leave blank for Lambda λ):",
-                "New Transition",
-                JOptionPane.PLAIN_MESSAGE);
+        JTextField symbolField = new JTextField();
 
-        if (symbolStr != null) {
-            Character symbol = symbolStr.isEmpty() ? null : symbolStr.charAt(0);
-            return new FSATransition(start, end, symbol);
+        Object[] message = {
+                "Enter transition symbol\n(Leave blank for Lambda λ)", symbolField,
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "New Transition",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (option == JOptionPane.OK_OPTION) {
+            String nameStr = symbolField.getText();
+
+            if (nameStr != null && nameStr.length() > 1) showErrorMessage("Transition symbols must be single characters", "Couldn't Create Transition");
+            else {
+                saveState();
+                return new FSATransition(start, end, nameStr == null || nameStr.isEmpty() ? null : nameStr.charAt(0));
+            }
         }
-
         return null;
     }
 
@@ -68,17 +61,23 @@ public class FSAAutomatonCanvas extends AbstractAutomatonCanvas<FSAState, FSATra
     }
 
     @Override
-    protected FSATransition editTransition(FSATransition transition) {
-        String currentSym = transition.getSymbol() == null ? "" : transition.getSymbol().toString();
-        String newSym = JOptionPane.showInputDialog(this,
-                "Edit Transition Symbol\n(Leave blank for Lambda λ):", currentSym);
+    protected void editTransition(FSATransition transition) {
+        JTextField symbolField = new JTextField(transition.getSymbol() == null ? "" : String.valueOf(transition.getSymbol()));
 
-        if (newSym != null) {
-            Character symbol = newSym.isEmpty() ? null : newSym.charAt(0);
-            return new FSATransition(transition.getStart(), transition.getEnd(), symbol);
+        Object[] message = {
+                "Enter transition symbol\n(Leave blank for Lambda λ)", symbolField,
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "Edit Transition",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (option == JOptionPane.OK_OPTION) {
+            String nameStr = symbolField.getText();
+            if (nameStr != null && nameStr.length() > 1) showErrorMessage("Transition symbols must be single characters", "Couldn't Edit Transition");
+            else if (!Objects.equals(transition.getSymbol(), nameStr == null || nameStr.isEmpty() ? null : nameStr.charAt(0))) {
+                saveState();
+                transition.setSymbol(nameStr == null || nameStr.isEmpty() ? null : nameStr.charAt(0));
+            }
         }
-
-        return null;
     }
 
     @Override

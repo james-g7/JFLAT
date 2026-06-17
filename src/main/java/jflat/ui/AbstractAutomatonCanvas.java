@@ -3,6 +3,7 @@ package ui;
 import core.generics.AbstractAutomata;
 import core.generics.AbstractState;
 import core.generics.AbstractTransition;
+import core.tm.TuringMachineState1D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,17 +74,90 @@ public abstract class AbstractAutomatonCanvas<
     // ==========================================
     // ABSTRACT HOOKS (Implemented by Subclasses)
     // ==========================================
-
-    protected abstract S createNewState(int x, int y);
+    protected abstract S instantiateState(int x, int y, String name);
     protected abstract S copyState(S original);
-    protected abstract void editState(S state);
-    protected abstract T createNewTransition(S start, S end);
-    protected abstract T copyTransition(T original, S newStart, S newEnd);
-    protected abstract T editTransition(T transition);
-    protected abstract void addContextMenuExtras(JPopupMenu popup, S state);
-    protected abstract boolean isStateFinal(S state);
 
-    public abstract void populateFunctionsMenu(JMenu functionsMenu, JFlatMainWindow mainWindow);
+    protected S createNewState(int x, int y) {
+        String defaultName = automaton.generateUniqueStateName("q");
+        JTextField nameField = new JTextField(defaultName);
+
+        Object[] message = {
+                "Enter State Name", nameField,
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "New State",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (option == JOptionPane.OK_OPTION) {
+            String nameStr = nameField.getText();
+
+            if (nameStr == null || nameStr.isEmpty()) {
+                showErrorMessage("State names cannot be empty", "Couldn't Create State");
+            }
+            else if (!nameStr.equals(automaton.generateUniqueStateName(nameStr))) {
+                showErrorMessage("State names must be unique", "Couldn't Create State");
+            } else {
+                saveState();
+                return instantiateState(x, y, nameStr);
+            }
+        }
+        return null;
+    };
+
+    protected void editState(S state) {
+        JTextField nameField = new JTextField(state.getName());
+
+        Object[] message = {
+                "Enter State Name:", nameField,
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "Edit State",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (option == JOptionPane.OK_OPTION) {
+            String newName = nameField.getText();
+            if (newName == null || newName.isEmpty()) showErrorMessage("State names cannot be empty", "Couldn't Edit State");
+            else if (!newName.equals(state.getName()) && !newName.equals(automaton.generateUniqueStateName(newName))) {
+                showErrorMessage("State names must be unique", "Couldn't Edit State");
+            } else {
+                saveState();
+                state.setName(newName);
+                repaint();
+            }
+        }
+    };
+
+    protected abstract T instantiateTransition(S start, S end, Character symbol);
+    protected abstract T copyTransition(T original, S newStart, S newEnd);
+
+    protected T createNewTransition(S start, S end) {
+        JTextField symbolField = new JTextField();
+
+        Object[] message = {
+                "Enter transition symbol", symbolField,
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "New Transition",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (option == JOptionPane.OK_OPTION) {
+            String nameStr = symbolField.getText();
+
+            if (nameStr == null || nameStr.isEmpty()) showErrorMessage("Transition symbols cannot be empty", "Couldn't Create Transition");
+            else if (nameStr.length() != 1) showErrorMessage("Transition symbols must be single characters", "Couldn't Create Transition");
+            else {
+                saveState();
+                return instantiateTransition(start, end, nameStr.charAt(0));
+            }
+        }
+        return null;
+    }
+
+    protected abstract void editTransition(T transition);
+
+    protected void addContextMenuExtras(JPopupMenu popup, S state) {}
+    protected boolean isStateFinal(S state) {
+        return false;
+    }
+
+    public void populateFunctionsMenu(JMenu functionsMenu, JFlatMainWindow mainWindow) {}
 
     // ==========================================
     // TOOLBAR & KEY BINDINGS

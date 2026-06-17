@@ -3,6 +3,7 @@ package ui;
 import core.fsa.FSAAutomata;
 import core.fst.mealy.MealyMachineAutomata;
 import core.fst.moore.MooreMachineAutomata;
+import core.tm.TuringMachine1D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,23 +38,25 @@ public class NewAutomatonDialog extends JDialog {
                 }
             },
             new CanvasFactory() {
-                @Override
                 public String getDisplayName() {
                     return "Moore Machine";
                 }
 
-                @Override
                 public AbstractAutomatonCanvas<?, ?, ?> create(String name) {
                     return new MooreMachineCanvas(new MooreMachineAutomata(name));
                 }
             },
             new CanvasFactory() {
                 public String getDisplayName() { return "Pushdown Automaton (PDA)"; }
+
                 public AbstractAutomatonCanvas<?, ?, ?> create(String name) { return null; }
             },
             new CanvasFactory() {
                 public String getDisplayName() { return "Turing Machine (TM)"; }
-                public AbstractAutomatonCanvas<?, ?, ?> create(String name) { return null; }
+
+                public AbstractAutomatonCanvas<?, ?, ?> create(String name) {
+                    return new TuringMachineCanvas(new TuringMachine1D(name));
+                }
             }
     );
 

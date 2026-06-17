@@ -107,22 +107,9 @@ public class AutomatonMouseHandler<
                 return;
             } else if (!clickedTransitions.isEmpty()) {
                 T t = clickedTransitions.getFirst();
-                T newT = canvas.editTransition(t);
-
-                if (newT != null) {
-                    canvas.saveState();
-
-                    // --- UPDATED LOGIC HERE ---
-                    canvas.getAutomaton().removeTransition(t);
-                    canvas.getAutomaton().addTransition(newT);
-                    // --------------------------
-
-                    if (canvas.selectedTransitions.contains(t)) {
-                        canvas.selectedTransitions.remove(t);
-                        canvas.selectedTransitions.add(newT);
-                    }
-                    canvas.repaint();
-                }
+                canvas.editTransition(t);
+                canvas.saveState();
+                canvas.repaint();
                 return;
             }
         }

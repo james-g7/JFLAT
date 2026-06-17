@@ -7,10 +7,16 @@ import core.fst.moore.MooreMachineState;
 import core.fst.moore.MooreMachineTransition;
 
 import javax.swing.*;
+import java.util.Objects;
 
 public class MooreMachineCanvas extends AbstractAutomatonCanvas <MooreMachineState, MooreMachineTransition, MooreMachineAutomata> {
     public MooreMachineCanvas(MooreMachineAutomata automaton) {
         super(automaton);
+    }
+
+    @Override
+    protected MooreMachineState instantiateState(int x, int y, String name) {
+        return null;
     }
 
     @Override
@@ -32,10 +38,11 @@ public class MooreMachineCanvas extends AbstractAutomatonCanvas <MooreMachineSta
             String outSymbolStr = outSymbolField.getText();
 
             if (stateNameStr != null && !stateNameStr.isEmpty() &&
-                    outSymbolStr != null && !outSymbolStr.isEmpty()) {
+                    outSymbolStr != null && outSymbolStr.length() == 1) {
 
                 return new MooreMachineState(stateNameStr, x, y, outSymbolStr.charAt(0));
             }
+            showErrorMessage("Invalid output symbol", "Couldn't Create State");
         }
 
         return null;
@@ -60,32 +67,25 @@ public class MooreMachineCanvas extends AbstractAutomatonCanvas <MooreMachineSta
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (option == JOptionPane.OK_OPTION) {
-            String stateNameStr = stateNameField.getText();
+            String newName = stateNameField.getText();
             String outSymbolStr = outSymbolField.getText();
 
-            if (stateNameStr != null && !stateNameStr.isEmpty() &&
-                    outSymbolStr != null && !outSymbolStr.isEmpty()) {
-                if (!stateNameStr.equals(state.getName())) {
-                    state.setName(automaton.generateUniqueStateName(stateNameStr.trim()));
-                }
-                state.setOutput(outSymbolStr.charAt(0));
+            if (newName == null || newName.isEmpty()) showErrorMessage("State names cannot be empty", "Couldn't Edit State");
+            else if (!newName.equals(state.getName()) && !newName.equals(automaton.generateUniqueStateName(newName))) {
+                showErrorMessage("State names must be unique", "Couldn't Edit State");
+            } else if (outSymbolStr == null) showErrorMessage("Output cannot be empty", "Couldn't Edit State");
+            else if (outSymbolStr.length() != 1) showErrorMessage("Output must be a single character", "Couldn't Edit State");
+            else {
+                saveState();
+                state.setName(newName);
+                repaint();
             }
         }
     }
 
     @Override
-    protected MooreMachineTransition createNewTransition(MooreMachineState start, MooreMachineState end) {
-        String symbolStr = JOptionPane.showInputDialog(this,
-                "Enter transition symbol:",
-                "New Transition",
-                JOptionPane.PLAIN_MESSAGE);
-
-        if (symbolStr != null && !symbolStr.isEmpty()) {
-            return new MooreMachineTransition(start, end, symbolStr.charAt(0));
-        } else {
-            showErrorMessage("Empty transitions are not allowed for this automaton", "Couldn't Create Transition");
-            return null;
-        }
+    protected MooreMachineTransition instantiateTransition(MooreMachineState start, MooreMachineState end, Character symbol) {
+        return new MooreMachineTransition(start, end, symbol);
     }
 
     @Override
@@ -94,25 +94,25 @@ public class MooreMachineCanvas extends AbstractAutomatonCanvas <MooreMachineSta
     }
 
     @Override
-    protected MooreMachineTransition editTransition(MooreMachineTransition transition) {
-        String newSym = JOptionPane.showInputDialog(this,
-                "Edit Transition Symbol", String.valueOf(transition.getSymbol()));
-        if (newSym != null && !newSym.isEmpty()) {
-            return new MooreMachineTransition(transition.getStart(), transition.getEnd(), newSym.charAt(0));
-        } else {
-            showErrorMessage("Empty transitions are not allowed for this automaton", "Couldn't Create Transition");
-            return null;
+    protected void editTransition(MooreMachineTransition transition) {
+        JTextField symbolField = new JTextField(transition.getSymbol());
+
+        Object[] message = {
+                "Enter transition symbol", symbolField,
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "Edit Transition",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (option == JOptionPane.OK_OPTION) {
+            String nameStr = symbolField.getText();
+
+            if (nameStr == null || nameStr.isEmpty()) showErrorMessage("Transition symbols cannot be empty", "Couldn't Edit Transition");
+            else if (nameStr.length() != 1) showErrorMessage("Transition symbols must be single characters", "Couldn't Edit Transition");
+            else if (!Objects.equals(transition.getSymbol(), nameStr.charAt(0))) {
+                saveState();
+                transition.setSymbol(nameStr.charAt(0));
+            }
         }
-    }
-
-    @Override
-    protected void addContextMenuExtras(JPopupMenu popup, MooreMachineState state) {
-        return;
-    }
-
-    @Override
-    protected boolean isStateFinal(MooreMachineState state) {
-        return false;
     }
 
     @Override
