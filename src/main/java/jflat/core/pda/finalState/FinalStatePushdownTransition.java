@@ -2,13 +2,13 @@ package core.pda.finalState;
 
 import core.generics.AbstractTransition;
 
-public class FinalStatePushdownAutomataTransition extends AbstractTransition<FinalStatePushdownState, FinalStatePushdownAutomataTransition> {
+public class FinalStatePushdownTransition extends AbstractTransition<FinalStatePushdownState, FinalStatePushdownTransition> {
 
     private Character inSymbol;
     private String popSymbol;
     private String pushSymbols;
 
-    public FinalStatePushdownAutomataTransition(FinalStatePushdownState start, FinalStatePushdownState end, Character inSymbol, String popSymbol, String pushSymbols) {
+    public FinalStatePushdownTransition(FinalStatePushdownState start, FinalStatePushdownState end, Character inSymbol, String popSymbol, String pushSymbols) {
         super(start, end);
         this.inSymbol = inSymbol;
         this.popSymbol = popSymbol;

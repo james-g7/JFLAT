@@ -1,13 +1,13 @@
 package ui;
 
 import core.pda.finalState.FinalStatePushdownAutomata;
-import core.pda.finalState.FinalStatePushdownAutomataTransition;
+import core.pda.finalState.FinalStatePushdownTransition;
 import core.pda.finalState.FinalStatePushdownState;
 
 import javax.swing.*;
 import java.util.Objects;
 
-public class FinalStatePushdownAutomataCanvas extends AbstractAutomatonCanvas<FinalStatePushdownState, FinalStatePushdownAutomataTransition, FinalStatePushdownAutomata> {
+public class FinalStatePushdownAutomataCanvas extends AbstractAutomatonCanvas<FinalStatePushdownState, FinalStatePushdownTransition, FinalStatePushdownAutomata> {
     FinalStatePushdownAutomataCanvas(FinalStatePushdownAutomata automaton) {
         super(automaton);
     }
@@ -23,7 +23,7 @@ public class FinalStatePushdownAutomataCanvas extends AbstractAutomatonCanvas<Fi
     }
 
     @Override
-    protected FinalStatePushdownAutomataTransition createNewTransition(FinalStatePushdownState start, FinalStatePushdownState end) {
+    protected FinalStatePushdownTransition createNewTransition(FinalStatePushdownState start, FinalStatePushdownState end) {
         JTextField inSymbolField = new JTextField();
         JTextField popSymbolField = new JTextField();
         JTextField pushSymbolsField = new JTextField();
@@ -72,7 +72,7 @@ public class FinalStatePushdownAutomataCanvas extends AbstractAutomatonCanvas<Fi
 
             saveState();
 
-            return new FinalStatePushdownAutomataTransition(
+            return new FinalStatePushdownTransition(
                     start,
                     end,
                     inChar,
@@ -85,12 +85,12 @@ public class FinalStatePushdownAutomataCanvas extends AbstractAutomatonCanvas<Fi
     }
 
     @Override
-    protected FinalStatePushdownAutomataTransition copyTransition(FinalStatePushdownAutomataTransition original, FinalStatePushdownState newStart, FinalStatePushdownState newEnd) {
-        return new FinalStatePushdownAutomataTransition(newStart, newEnd, original.getInSymbol(), original.getPopSymbol(), original.getPushSymbols());
+    protected FinalStatePushdownTransition copyTransition(FinalStatePushdownTransition original, FinalStatePushdownState newStart, FinalStatePushdownState newEnd) {
+        return new FinalStatePushdownTransition(newStart, newEnd, original.getInSymbol(), original.getPopSymbol(), original.getPushSymbols());
     }
 
     @Override
-    protected void editTransition(FinalStatePushdownAutomataTransition transition) {
+    protected void editTransition(FinalStatePushdownTransition transition) {
         String currentIn = transition.getInSymbol() == null ? "" : String.valueOf(transition.getInSymbol());
         String currentPop = transition.getPopSymbol() == null ? "" : transition.getPopSymbol();
         String currentPush = transition.getPushSymbols() == null ? "" : transition.getPushSymbols();

@@ -1,13 +1,11 @@
 package core.pda.finalState;
 
 import core.generics.AbstractAutomata;
-import core.pda.emptyStack.EmptyStackPushdownState;
-import core.pda.emptyStack.EmptyStackPushdownTransition;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class FinalStatePushdownAutomata extends AbstractAutomata<FinalStatePushdownState, FinalStatePushdownAutomataTransition> {
+public class FinalStatePushdownAutomata extends AbstractAutomata<FinalStatePushdownState, FinalStatePushdownTransition> {
     private final Stack<String> stack = new Stack<>();
 
     public FinalStatePushdownAutomata(String name) {
@@ -27,7 +25,7 @@ public class FinalStatePushdownAutomata extends AbstractAutomata<FinalStatePushd
         TreeSet<String> stackAlphabet = new TreeSet<>();
         stackAlphabet.add("Z_0");
 
-        for (FinalStatePushdownAutomataTransition t : transitions) {
+        for (FinalStatePushdownTransition t : transitions) {
             if (t.getPopSymbol() != null) {
                 stackAlphabet.add(t.getPopSymbol());
             }
@@ -45,7 +43,7 @@ public class FinalStatePushdownAutomata extends AbstractAutomata<FinalStatePushd
 
     public TreeSet<Character> getInAlphabet() {
         return transitions.stream()
-                .map(FinalStatePushdownAutomataTransition::getInSymbol)
+                .map(FinalStatePushdownTransition::getInSymbol)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toCollection(TreeSet::new));
     }
@@ -88,7 +86,7 @@ public class FinalStatePushdownAutomata extends AbstractAutomata<FinalStatePushd
 
         // Transition function
         List<String> deltaList = new ArrayList<>();
-        for(FinalStatePushdownAutomataTransition transition : transitions) {
+        for(FinalStatePushdownTransition transition : transitions) {
 
             // Read Symbol
             String readSym = transition.getInSymbol() == null

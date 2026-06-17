@@ -2,7 +2,7 @@ package core.pda.finalState;
 
 import core.generics.AbstractState;
 
-public class FinalStatePushdownState extends AbstractState<FinalStatePushdownState, FinalStatePushdownAutomataTransition> {
+public class FinalStatePushdownState extends AbstractState<FinalStatePushdownState, FinalStatePushdownTransition> {
     private boolean isFinal;
 
     public FinalStatePushdownState(String name, int x, int y, boolean isFinal) {
