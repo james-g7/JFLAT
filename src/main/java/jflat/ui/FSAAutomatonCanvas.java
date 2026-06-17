@@ -29,11 +29,6 @@ public class FSAAutomatonCanvas extends AbstractAutomatonCanvas<FSAState, FSATra
     }
 
     @Override
-    protected FSATransition instantiateTransition(FSAState start, FSAState end, Character symbol) {
-        return null;
-    }
-
-    @Override
     protected FSATransition createNewTransition(FSAState start, FSAState end) {
         JTextField symbolField = new JTextField();
 

@@ -58,11 +58,6 @@ public class MealyMachineCanvas extends  AbstractAutomatonCanvas<MealyMachineSta
     }
 
     @Override
-    protected MealyMachineTransition instantiateTransition(MealyMachineState start, MealyMachineState end, Character symbol) {
-        return null;
-    }
-
-    @Override
     protected void editTransition(MealyMachineTransition transition) {
         JTextField inSymbolField = new JTextField(transition.getInChar());
         JTextField outSymbolField = new JTextField(transition.getOutChar());

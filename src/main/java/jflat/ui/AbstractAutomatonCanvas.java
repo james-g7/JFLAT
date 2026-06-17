@@ -125,31 +125,8 @@ public abstract class AbstractAutomatonCanvas<
         }
     };
 
-    protected abstract T instantiateTransition(S start, S end, Character symbol);
     protected abstract T copyTransition(T original, S newStart, S newEnd);
-
-    protected T createNewTransition(S start, S end) {
-        JTextField symbolField = new JTextField();
-
-        Object[] message = {
-                "Enter transition symbol", symbolField,
-        };
-
-        int option = JOptionPane.showConfirmDialog(this, message, "New Transition",
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        if (option == JOptionPane.OK_OPTION) {
-            String nameStr = symbolField.getText();
-
-            if (nameStr == null || nameStr.isEmpty()) showErrorMessage("Transition symbols cannot be empty", "Couldn't Create Transition");
-            else if (nameStr.length() != 1) showErrorMessage("Transition symbols must be single characters", "Couldn't Create Transition");
-            else {
-                saveState();
-                return instantiateTransition(start, end, nameStr.charAt(0));
-            }
-        }
-        return null;
-    }
-
+    protected abstract T createNewTransition(S start, S end);
     protected abstract void editTransition(T transition);
 
     protected void addContextMenuExtras(JPopupMenu popup, S state) {}

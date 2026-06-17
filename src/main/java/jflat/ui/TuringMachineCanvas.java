@@ -28,11 +28,6 @@ public class TuringMachineCanvas extends AbstractAutomatonCanvas <TuringMachineS
     }
 
     @Override
-    protected TuringMachineTransition1D instantiateTransition(TuringMachineState1D start, TuringMachineState1D end, Character symbol) {
-        return null;
-    }
-
-    @Override
     protected TuringMachineTransition1D createNewTransition(TuringMachineState1D start, TuringMachineState1D end) {
         JTextField readSymbolField = new JTextField();
         JTextField writeSymbolField = new JTextField();
