@@ -2,6 +2,8 @@ package core.tm;
 
 import core.generics.AbstractTransition;
 
+import java.util.Objects;
+
 public class TuringMachineTransition1D extends AbstractTransition<TuringMachineState1D, TuringMachineTransition1D> {
     private Character read;
     private Character write;
@@ -54,11 +56,27 @@ public class TuringMachineTransition1D extends AbstractTransition<TuringMachineS
         this.write = outChar;
     }
 
-    public String getDestination() {
-        return String.valueOf(destination);
+    public Direction getDestination() {
+        return destination;
     }
 
-    public void setDestination(char destination) {
-        this.destination = Direction.valueOf(String.valueOf(destination));
+    public void setDestination(Direction destination) {
+        this.destination = destination;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getStart(), getEnd(), read, write, destination);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof TuringMachineTransition1D other)) return false;
+        return Objects.equals(getStart(), other.getStart()) &&
+                Objects.equals(getEnd(), other.getEnd()) &&
+                Objects.equals(getRead(), other.getRead()) &&
+                Objects.equals(getWrite(), other.getWrite()) &&
+                Objects.equals(getDestination(), other.getDestination());
     }
 }

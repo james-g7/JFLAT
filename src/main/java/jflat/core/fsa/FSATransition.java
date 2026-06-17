@@ -33,4 +33,13 @@ public class FSATransition extends AbstractTransition<FSAState, FSATransition> {
         }
         return String.valueOf(symbol);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof FSATransition other)) return false;
+        return Objects.equals(getStart(), other.getStart()) &&
+                Objects.equals(getEnd(), other.getEnd()) &&
+                Objects.equals(symbol, other.symbol);
+    }
 }
